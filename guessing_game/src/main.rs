@@ -5,10 +5,10 @@ fn main() {
     let mut rng = thread_rng();
     let random_num: i32 = rng.gen_range(1..100);
 
-    let mut user_guess = 0;
+    let mut user_guess:i32;
 
     // Take user input till guess is right.
-    while random_num != user_guess {
+    loop {
         // Take user input.
         let mut input_string = String::new();
         stdin().read_line(&mut input_string).unwrap();
@@ -26,6 +26,7 @@ fn main() {
         }
         else {
             println!("Congratulation right guess");
+            break;
         }
 
     }
