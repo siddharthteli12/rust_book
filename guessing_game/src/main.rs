@@ -1,4 +1,4 @@
-use std::io::stdin;
+use std::{io::stdin, cmp::Ordering};
 use rand::{Rng, thread_rng};
 fn main() {
     // Gen. random number.
@@ -18,15 +18,14 @@ fn main() {
             Err(e) => panic!("Not valid integer `{:}", e),
             Ok(val) => val,
         };
-        if user_guess > random_num {
-            println!("Guess value too big");
-        }
-        else if user_guess < random_num {
-            println!("Guess value too small");
-        }
-        else {
-            println!("Congratulation right guess");
-            break;
+
+        match user_guess.cmp(&random_num) {
+            Ordering::Greater => println!("Guess value too big"),
+            Ordering::Less => println!("Guess value too small"),
+            Ordering::Equal => {
+                println!("Congratulation right guess");
+                break;
+            }
         }
 
     }
