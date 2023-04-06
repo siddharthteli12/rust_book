@@ -8,19 +8,18 @@ fn test_move() {
     // Value is not moved for prmitive type.
     // Rather new value 100 is stored on stake & y points to it.
     let x: i32 = 100;
-    let y = x;
+    let _y = x;
     println!("Is X valid - {:?}", x);
 
     // Same doesn't happen with string type.
     // value is moved, ownership is transferred.
     let string_1 = String::from("Siddharth");
-    let string_2 = string_1;
+    let _string_2 = string_1;
     // Error - value borrowed here after move
     // println!("Is string_1 valid - {:?}", string_1);
 }
 
 // Cannot impl Copy trait because of string type which impl drop.
-#[derive(Debug)]
 struct Student {
     age: i32,
     height: i32,
@@ -29,8 +28,8 @@ struct Student {
 
 #[derive(Debug, Copy, Clone)]
 struct Student1 {
-    age: i32,
-    height: i32,
+    pub age: i32,
+    pub height: i32,
 }
 
 // Test copy trait on stucts.
@@ -50,8 +49,8 @@ fn test_copy() {
     };
 
     // Try to move value to new variable.
-    let student_new = student;
-    let student_new1 = student1;
+    let _student_new = student;
+    let _student_new1 = student1;
 
     // Invalid student doesn't impl copy trait.
     //println!("Is student valid {:?}", student);
