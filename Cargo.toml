@@ -3,4 +3,5 @@
 members = [
     "guessing_game",
     "ownership",
+    "first_word",
 ]

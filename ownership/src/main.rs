@@ -1,6 +1,7 @@
 fn main() {
     test_move();
     test_copy();
+    assert_eq!(first_word("Test 1".to_string()), 4);
 }
 
 // Test the concept of move.
@@ -57,4 +58,31 @@ fn test_copy() {
 
     // Valid student1 impl copy trait.
     println!("Is student1 valid {:?}", student1);
+}
+
+// Returns index of first word.
+fn first_word(value: String) -> usize {
+    let char_list: Vec<char> = value.chars().collect();
+    match char_list.iter().position(|&x| x == ' ') {
+        Some(n) => n,
+        None => value.len(),
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::first_word;
+    #[test]
+    fn test_first_word_with_whitespace() {
+        let test_string = String::from("Siddharth Teli");
+        let index = first_word(test_string.clone());
+        assert_eq!(test_string[0..index], String::from("Siddharth"));
+    }
+
+    #[test]
+    fn test_firsttest_first_word_without_whitespace_word() {
+        let test_string = String::from("SiddharthTeli");
+        let index = first_word(test_string.clone());
+        assert_eq!(test_string[0..index], String::from("SiddharthTeli"));
+    }
 }
