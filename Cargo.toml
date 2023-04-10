@@ -5,4 +5,5 @@ members = [
     "ownership",
     "first_word",
     "managing_growing_project_1",
+    "modules",
 ]
