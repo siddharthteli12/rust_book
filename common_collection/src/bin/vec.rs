@@ -2,7 +2,11 @@ use std::vec;
 
 fn main() {
     // List of friends.
-    let mut friends_list = vec!["mohit".to_string(), "akhil".to_string(), "jam".to_string()];
+    let mut friends_list: Vec<String> = vec!["mohit", "akhil", "jam"]
+        .iter()
+        .map(|&friend| friend.to_string())
+        .collect();
+    // Add new friend.
     friends_list.push("Sai".to_string());
 
     // Iter all friends list.
