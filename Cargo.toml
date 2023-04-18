@@ -7,4 +7,5 @@ members = [
     "managing_growing_project_1",
     "modules",
     "common_collection",
+    "error_handling",
 ]
