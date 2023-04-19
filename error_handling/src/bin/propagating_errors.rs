@@ -1,17 +1,11 @@
 use std::{fs::File, io::Read};
 
-// This funtion doesn't panic but returns result type so error can be handled at caller funtion.
+// ? is used to propogate error.
 fn read_username_from_file() -> Result<String, std::io::Error> {
-    match File::open("user.txt") {
-        Ok(mut file) => {
-            let mut username = String::new();
-            match file.read_to_string(&mut username) {
-                Ok(_) => Ok(username),
-                Err(e) => Err(e),
-            }
-        }
-        Err(e) => Err(e),
-    }
+    let mut file = File::open("user.txt")?;
+    let mut username = String::new();
+    file.read_to_string(&mut username)?;
+    Ok(username)
 }
 
 fn main() {
