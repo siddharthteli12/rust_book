@@ -10,7 +10,7 @@ fn main() {
 }
 
 // Find largest num in list
-fn largest_num<T: std::cmp::PartialOrd + Copy>(list: &Vec<T>) -> T {
+fn largest_num<T: std::cmp::PartialOrd + Copy>(list: &[T]) -> T {
     let mut largest = list[0];
 
     for num in list {
