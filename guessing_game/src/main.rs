@@ -2,19 +2,17 @@ use rand::{thread_rng, Rng};
 use std::{cmp::Ordering, io::stdin};
 
 mod guess {
-    pub struct Guess {
-        value: i32,
-    }
+    pub struct Guess(i32);
 
     impl Guess {
         pub fn new(value: i32) -> Self {
             if value < 0 || value > 100 {
                 panic!("Value should be between 0 to 100 only");
             }
-            Self { value }
+            Self(value)
         }
         pub fn value(self) -> i32 {
-            self.value
+            self.0
         }
     }
 }
