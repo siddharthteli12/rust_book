@@ -8,4 +8,5 @@ members = [
     "modules",
     "common_collection",
     "error_handling",
+    "generic_traits_lifetime",
 ]
