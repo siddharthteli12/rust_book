@@ -1,4 +1,4 @@
-use generic_traits_lifetime::{Summary, Tweet, NewsArticle};
+use generic_traits_lifetime::{NewsArticle, Summary, Tweet};
 
 fn main() {
     let tweet = Tweet {

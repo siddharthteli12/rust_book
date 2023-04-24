@@ -1,7 +1,8 @@
 pub trait Summary {
     fn summarize(&self) -> String {
-        String::from("Default summarize")
+        format!("Default summary from {:}", self.summarize_author())
     }
+    fn summarize_author(&self) -> String;
 }
 
 pub struct NewsArticle {
@@ -12,6 +13,9 @@ pub struct NewsArticle {
 }
 
 impl Summary for NewsArticle {
+    fn summarize_author(&self) -> String {
+        String::from(&self.author)
+    }
 }
 
 pub struct Tweet {
@@ -24,5 +28,8 @@ pub struct Tweet {
 impl Summary for Tweet {
     fn summarize(&self) -> String {
         format!("{}: {}", self.username, self.content)
+    }
+    fn summarize_author(&self) -> String {
+        String::from(&self.username)
     }
 }
