@@ -14,7 +14,7 @@ pub struct NewsArticle {
 
 impl Summary for NewsArticle {
     fn summarize_author(&self) -> String {
-        String::from(&self.author)
+        format!("@{:}", &self.author)
     }
 }
 
@@ -30,6 +30,6 @@ impl Summary for Tweet {
         format!("{}: {}", self.username, self.content)
     }
     fn summarize_author(&self) -> String {
-        String::from(&self.username)
+        format!("@{:}", &self.username)
     }
 }
