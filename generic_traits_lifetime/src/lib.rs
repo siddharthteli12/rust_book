@@ -33,3 +33,7 @@ impl Summary for Tweet {
         format!("@{:}", &self.username)
     }
 }
+
+pub fn notify(item: &impl Summary) {
+    println!("Today's news {:}", item.summarize())
+}

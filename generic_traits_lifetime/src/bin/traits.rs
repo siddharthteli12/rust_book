@@ -1,4 +1,4 @@
-use generic_traits_lifetime::{NewsArticle, Summary, Tweet};
+use generic_traits_lifetime::{notify, NewsArticle, Summary, Tweet};
 
 fn main() {
     let tweet = Tweet {
@@ -18,4 +18,5 @@ fn main() {
     };
 
     println!("Summarize of news article: {:}", news_article.summarize());
+    notify(&tweet);
 }
