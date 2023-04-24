@@ -7,23 +7,24 @@ mod rectangle {
         width: U,
     }
 
-    impl<T, U> Rectangle<T, U>
+    impl<'a, 'b: 'a, T: 'a, U: 'b> Rectangle<T, U>
     where
-        U: Mul<T, Output = U>,
+        &'b U: Mul<&'a T, Output = U>,
     {
         pub fn new(height: T, width: U) -> Self {
             Self { height, width }
         }
+
+        pub fn area(&'b self) -> U {
+            &self.width * &self.height
+        }
+
         pub fn height(self) -> T {
             self.height
         }
 
         pub fn width(self) -> U {
             self.width
-        }
-
-        pub fn area(self) -> U {
-            self.width * self.height
         }
     }
 }
