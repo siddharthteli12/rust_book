@@ -46,3 +46,25 @@ fn main() {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::guess::Guess;
+
+    #[test]
+    #[should_panic(expected = "Value should be between 0 to 100 only")]
+    fn test_guess_invalid_value_1() {
+        Guess::new(200);
+    }
+
+    #[test]
+    #[should_panic(expected = "Value should be between 0 to 100 only")]
+    fn test_guess_invalid_value_2() {
+        Guess::new(-1);
+    }
+
+    #[test]
+    fn test_guess_valid_value_1() {
+        Guess::new(50);
+    }
+}
