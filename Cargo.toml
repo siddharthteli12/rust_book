@@ -9,4 +9,5 @@ members = [
     "common_collection",
     "error_handling",
     "generic_traits_lifetime",
+    "io_project",
 ]
