@@ -4,8 +4,11 @@ pub fn handle_pattern_matching(
     pattern: &str,
     file_path: &str,
 ) -> Result<Vec<(usize, String)>, Error> {
+    // String data from file.
     let data: String = fs::read_to_string(file_path)?;
+    // Store line no. & line in tuple.
     let mut result_vec: Vec<(usize, String)> = vec![];
+    // Match pattern line by line.
     for (count, line) in data.lines().enumerate() {
         if line.contains(pattern) {
             result_vec.push((count.add(1), String::from(line)));
