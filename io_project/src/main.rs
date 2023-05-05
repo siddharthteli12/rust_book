@@ -4,16 +4,21 @@ use std::env;
 
 const ARGS_LEN: usize = 3;
 
+pub struct Config {
+    pub pattern: String,
+    pub file_path: String,
+}
+
 fn main() {
     match read_cli_arguments() {
-        Ok((pattern, file_path)) => match handle_pattern_matching(&pattern, &file_path) {
+        Ok(config) => match handle_pattern_matching(&config.pattern, &config.file_path) {
             Ok(result_vec) => {
                 for result in result_vec {
                     println!("{:} {:}", result.0, result.1);
                 }
             }
             Err(e) => {
-                println!("Issue in matching pattern due to {:?}", e);
+                println!("Issue- {:?}", e);
             }
         },
         Err(e) => {
@@ -22,7 +27,7 @@ fn main() {
     }
 }
 
-fn read_cli_arguments() -> Result<(String, String), std::io::Error> {
+fn read_cli_arguments() -> Result<Config, std::io::Error> {
     let args: Vec<String> = env::args().collect();
 
     match args.len().cmp(&ARGS_LEN) {
@@ -34,6 +39,9 @@ fn read_cli_arguments() -> Result<(String, String), std::io::Error> {
             std::io::ErrorKind::Other,
             format!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
         )),
-        Ordering::Equal => Ok((String::from(args[1].clone()), String::from(args[2].clone()))),
+        Ordering::Equal => Ok(Config {
+            pattern: String::from(args[1].clone()),
+            file_path: String::from(args[2].clone()),
+        }),
     }
 }
