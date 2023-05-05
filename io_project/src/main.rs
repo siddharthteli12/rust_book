@@ -9,6 +9,15 @@ pub struct Config {
     pub file_path: String,
 }
 
+impl Config {
+    fn new(args: &[String]) -> Self {
+        Self {
+            pattern: args[1].clone(),
+            file_path: args[2].clone(),
+        }
+    }
+}
+
 fn main() {
     match read_cli_arguments() {
         Ok(config) => match handle_pattern_matching(&config.pattern, &config.file_path) {
@@ -39,9 +48,6 @@ fn read_cli_arguments() -> Result<Config, std::io::Error> {
             std::io::ErrorKind::Other,
             format!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
         )),
-        Ordering::Equal => Ok(Config {
-            pattern: String::from(args[1].clone()),
-            file_path: String::from(args[2].clone()),
-        }),
+        Ordering::Equal => Ok(Config::new(&args)),
     }
 }
