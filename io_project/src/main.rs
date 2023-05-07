@@ -21,11 +21,15 @@ impl Config {
         }
     }
 
-    // Validates arg length is correct or else panics.
+    // Validates if args length is atleast const value or else panics.
     pub fn validate_config_args(args: &[String]) {
         match args.len().cmp(&ARGS_LEN) {
-            Ordering::Equal => return,
-            _ => panic!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
+            Ordering::Less => panic!(
+                "Minimum args length is {:?}, got {:?}",
+                ARGS_LEN,
+                args.len()
+            ),
+            _ => return,
         };
     }
 }
