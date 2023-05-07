@@ -10,44 +10,31 @@ pub struct Config {
 }
 
 impl Config {
-    fn new(args: &[String]) -> Self {
+    pub fn new(args: &[String]) -> Self {
+        Self::validate_config_args(args);
         Self {
             pattern: args[1].clone(),
             file_path: args[2].clone(),
         }
     }
-}
-
-fn main() {
-    match read_cli_arguments() {
-        Ok(config) => match handle_pattern_matching(&config.pattern, &config.file_path) {
-            Ok(result_vec) => {
-                for result in result_vec {
-                    println!("{:} {:}", result.0, result.1);
-                }
-            }
-            Err(e) => {
-                println!("Issue- {:?}", e);
-            }
-        },
-        Err(e) => {
-            println!("Issue with cli arguments due to {:?}", e);
-        }
+    pub fn validate_config_args(args: &[String]) {
+        match args.len().cmp(&ARGS_LEN) {
+            Ordering::Equal => return,
+            _ => panic!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
+        };
     }
 }
 
-fn read_cli_arguments() -> Result<Config, std::io::Error> {
-    let args: Vec<String> = env::args().collect();
-
-    match args.len().cmp(&ARGS_LEN) {
-        Ordering::Less => Err(std::io::Error::new(
-            std::io::ErrorKind::Other,
-            format!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
-        )),
-        Ordering::Greater => Err(std::io::Error::new(
-            std::io::ErrorKind::Other,
-            format!("Expected {:} arg, found {:} arg", ARGS_LEN, args.len()),
-        )),
-        Ordering::Equal => Ok(Config::new(&args)),
+fn main() {
+    let config = Config::new(&env::args().collect::<Vec<String>>());
+    match handle_pattern_matching(&config.pattern, &config.file_path) {
+        Ok(result_vec) => {
+            for result in result_vec {
+                println!("{:} {:}", result.0, result.1);
+            }
+        }
+        Err(e) => {
+            println!("Can't find pattern in file due to- {:?}", e);
+        }
     }
 }
