@@ -18,3 +18,28 @@ pub fn handle_pattern_matching(
     }
     Ok(result_vec)
 }
+
+#[cfg(test)]
+pub mod test {
+    use crate::handle_pattern_matching;
+    #[test]
+    fn test_file_not_found() {
+        assert!(handle_pattern_matching("Siddharth", "test1.txt").is_err());
+    }
+
+    #[test]
+    fn test_non_existent_pattern() {
+        assert_eq!(
+            handle_pattern_matching("abadvdsvsd", "test.txt").unwrap(),
+            vec![]
+        );
+    }
+
+    #[test]
+    fn test_existent_pattern_with_multiple_empty_lines() {
+        assert_eq!(
+            handle_pattern_matching("Siddharth", "test.txt").unwrap(),
+            vec![(8_usize, "Siddharth Is Fine?".to_string())]
+        );
+    }
+}
