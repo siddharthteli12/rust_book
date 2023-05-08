@@ -4,6 +4,7 @@ use std::{cmp::Ordering, fs, io::Error, ops::Add};
 const ARGS_LEN: usize = 3;
 
 // To store pattern matching config.
+#[derive(PartialEq, Debug)]
 pub struct Config {
     pub pattern: String,
     pub file_path: String,
@@ -47,7 +48,7 @@ pub fn handle_pattern_matching(
 
 #[cfg(test)]
 pub mod test {
-    use crate::handle_pattern_matching;
+    use crate::{handle_pattern_matching, Config};
     #[test]
     fn test_file_not_found() {
         assert!(handle_pattern_matching("Siddharth", "test1.txt").is_err());
@@ -66,6 +67,29 @@ pub mod test {
         assert_eq!(
             handle_pattern_matching("Siddharth", "test.txt").unwrap(),
             vec![(8_usize, "Siddharth Is Fine?".to_string())]
+        );
+    }
+
+    #[test]
+    fn test_invalid_args_length() {
+        assert_eq!(
+            Config::build(&["Siddharth".to_string()]),
+            Err("Minimum expected args 3, got 1".to_string())
+        );
+    }
+
+    #[test]
+    fn test_valid_args_length() {
+        assert_eq!(
+            Config::build(&[
+                "main.rs".to_string(),
+                "Siddharth".to_string(),
+                "test.txt".to_string()
+            ]),
+            Ok(Config {
+                pattern: String::from("Siddharth"),
+                file_path: String::from("test.txt")
+            })
         );
     }
 }
