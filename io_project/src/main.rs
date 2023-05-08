@@ -1,9 +1,9 @@
-use io_project::{handle_pattern_matching, Config};
+use io_project::{search_pattern, Config};
 use std::{env, process};
 
 fn main() {
     match Config::build(&env::args().collect::<Vec<String>>()) {
-        Ok(config) => match handle_pattern_matching(&config.pattern, &config.file_path) {
+        Ok(config) => match search_pattern(config) {
             Ok(result_vec) => {
                 for result in result_vec {
                     println!("{:} {:}", result.0, result.1);

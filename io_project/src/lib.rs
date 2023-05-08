@@ -27,17 +27,14 @@ impl Config {
     }
 }
 
-pub fn handle_pattern_matching(
-    pattern: &str,
-    file_path: &str,
-) -> Result<Vec<(usize, String)>, Error> {
+pub fn search_pattern(config: Config) -> Result<Vec<(usize, String)>, Error> {
     // String data from file.
-    let data: String = fs::read_to_string(file_path)?;
+    let data: String = fs::read_to_string(config.file_path)?;
     // Store line no. & line in tuple.
     let mut result_vec: Vec<(usize, String)> = vec![];
     // Match pattern line by line.
     for (count, line) in data.lines().enumerate() {
-        if line.contains(pattern) {
+        if line.contains(&config.pattern) {
             result_vec.push((count.add(1), String::from(line)));
         } else {
             continue;
@@ -48,24 +45,42 @@ pub fn handle_pattern_matching(
 
 #[cfg(test)]
 pub mod test {
-    use crate::{handle_pattern_matching, Config};
+    use super::*;
+
+    fn sample_config() -> Config {
+        Config {
+            pattern: String::from("Siddharth"),
+            file_path: String::from("test.txt"),
+        }
+    }
+
+    #[test]
+    fn test_simple_pattern() {
+        let mut config = sample_config();
+        config.pattern = String::from("Hello");
+        assert_eq!(
+            search_pattern(config).unwrap(),
+            vec![(1_usize, "Hello How are you".to_string())]
+        );
+    }
     #[test]
     fn test_file_not_found() {
-        assert!(handle_pattern_matching("Siddharth", "test1.txt").is_err());
+        let mut config = sample_config();
+        config.file_path = String::from("test1.txt");
+        assert!(search_pattern(config).is_err());
     }
 
     #[test]
     fn test_non_existent_pattern() {
-        assert_eq!(
-            handle_pattern_matching("abadvdsvsd", "test.txt").unwrap(),
-            vec![]
-        );
+        let mut config = sample_config();
+        config.pattern = String::from("abadvdsvsd");
+        assert_eq!(search_pattern(config).unwrap(), vec![]);
     }
 
     #[test]
     fn test_existent_pattern_with_multiple_empty_lines() {
         assert_eq!(
-            handle_pattern_matching("Siddharth", "test.txt").unwrap(),
+            search_pattern(sample_config()).unwrap(),
             vec![(8_usize, "Siddharth Is Fine?".to_string())]
         );
     }
