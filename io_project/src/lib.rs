@@ -1,4 +1,30 @@
-use std::{fs, io::Error, ops::Add};
+use std::{cmp::Ordering, fs, io::Error, ops::Add};
+
+// Stores args length for pattern matching in file.
+const ARGS_LEN: usize = 3;
+
+// To store pattern matching config.
+pub struct Config {
+    pub pattern: String,
+    pub file_path: String,
+}
+
+impl Config {
+    // Validate args len & creates config instance.
+    pub fn build(args: &[String]) -> Result<Self, String> {
+        match args.len().cmp(&ARGS_LEN) {
+            Ordering::Less => Err(format!(
+                "Minimum expected args {:}, got {:}",
+                ARGS_LEN,
+                args.len()
+            )),
+            _ => Ok(Self {
+                pattern: args[1].clone(),
+                file_path: args[2].clone(),
+            }),
+        }
+    }
+}
 
 pub fn handle_pattern_matching(
     pattern: &str,
