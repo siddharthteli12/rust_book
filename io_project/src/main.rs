@@ -12,39 +12,32 @@ pub struct Config {
 }
 
 impl Config {
-    // Calls validate & then creates config instance.
-    pub fn new(args: &[String]) -> Self {
-        Self::validate_config_args(args);
-        Self {
-            pattern: args[1].clone(),
-            file_path: args[2].clone(),
-        }
-    }
-
-    // Validates if args length is atleast const value or else panics.
-    pub fn validate_config_args(args: &[String]) {
+    // Validate args len & creates config instance.
+    pub fn build(args: &[String]) -> Result<Self, String> {
         match args.len().cmp(&ARGS_LEN) {
-            Ordering::Less => panic!(
-                "Minimum args length is {:?}, got {:?}",
+            Ordering::Less => Err(format!(
+                "Minimum expected args {:}, got {:}",
                 ARGS_LEN,
                 args.len()
-            ),
-            _ => return,
-        };
+            )),
+            _ => Ok(Self {
+                pattern: args[1].clone(),
+                file_path: args[2].clone(),
+            }),
+        }
     }
 }
 
 fn main() {
-    let config = Config::new(&env::args().collect::<Vec<String>>());
-    // Matches given pattern in given file.
-    match handle_pattern_matching(&config.pattern, &config.file_path) {
-        Ok(result_vec) => {
-            for result in result_vec {
-                println!("{:} {:}", result.0, result.1);
+    match Config::build(&env::args().collect::<Vec<String>>()) {
+        Ok(config) => match handle_pattern_matching(&config.pattern, &config.file_path) {
+            Ok(result_vec) => {
+                for result in result_vec {
+                    println!("{:} {:}", result.0, result.1);
+                }
             }
-        }
-        Err(e) => {
-            println!("Can't find pattern in file due to- {:?}", e);
-        }
+            Err(e) => println!("Can't find pattern in file due to- {:?}", e),
+        },
+        Err(e) => println!("Can't build Config due to- {:?}", e),
     }
 }
