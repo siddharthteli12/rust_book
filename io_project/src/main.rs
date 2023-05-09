@@ -1,9 +1,9 @@
-use io_project::{search_pattern, Config};
+use io_project::{run, Config};
 use std::{env, process};
 
 fn main() {
     match Config::build(&env::args().collect::<Vec<String>>()) {
-        Ok(config) => match search_pattern(config) {
+        Ok(config) => match run(config) {
             Ok(result_vec) => {
                 for result in result_vec {
                     println!("{:} {:}", result.0, result.1);

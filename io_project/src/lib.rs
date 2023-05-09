@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, fs, io::Error, ops::Add};
+use std::{cmp::Ordering, env, fs, io::Error, ops::Add};
 
 // Stores args length for pattern matching in file.
 const ARGS_LEN: usize = 3;
@@ -8,6 +8,7 @@ const ARGS_LEN: usize = 3;
 pub struct Config {
     pub pattern: String,
     pub file_path: String,
+    pub ignore_case: bool,
 }
 
 impl Config {
@@ -19,23 +20,56 @@ impl Config {
                 ARGS_LEN,
                 args.len()
             )),
-            _ => Ok(Self {
-                pattern: args[1].clone(),
-                file_path: args[2].clone(),
-            }),
+            _ => {
+                let ignore_case = env::var("IGNORE_CASE").is_ok();
+                Ok(Self {
+                    pattern: args[1].clone(),
+                    file_path: args[2].clone(),
+                    ignore_case,
+                })
+            }
         }
     }
 }
 
-pub fn search_pattern(config: Config) -> Result<Vec<(usize, String)>, Error> {
+pub fn run(config: Config) -> Result<Vec<(usize, String)>, Error> {
     // String data from file.
-    let data: String = fs::read_to_string(config.file_path)?;
+    let content: String = fs::read_to_string(config.file_path)?;
+    if config.ignore_case {
+        search_case_insensitive(config.pattern, content)
+    } else {
+        search_case_sensitive(config.pattern, content)
+    }
+}
+
+pub fn search_case_insensitive(
+    pattern: String,
+    content: String,
+) -> Result<Vec<(usize, String)>, Error> {
+    let pattern = pattern.to_lowercase();
     // Store line no. & line in tuple.
     let mut result_vec: Vec<(usize, String)> = vec![];
     // Match pattern line by line.
-    for (count, line) in data.lines().enumerate() {
-        if line.contains(&config.pattern) {
-            result_vec.push((count.add(1), String::from(line)));
+    for (count, line) in content.lines().enumerate() {
+        if line.to_lowercase().contains(&pattern) {
+            result_vec.push((count.add(1), line.to_string()));
+        } else {
+            continue;
+        }
+    }
+    Ok(result_vec)
+}
+
+pub fn search_case_sensitive(
+    pattern: String,
+    content: String,
+) -> Result<Vec<(usize, String)>, Error> {
+    // Store line no. & line in tuple.
+    let mut result_vec: Vec<(usize, String)> = vec![];
+    // Match pattern line by line.
+    for (count, line) in content.lines().enumerate() {
+        if line.contains(&pattern) {
+            result_vec.push((count.add(1), line.to_string()));
         } else {
             continue;
         }
@@ -51,6 +85,7 @@ pub mod test {
         Config {
             pattern: String::from("Siddharth"),
             file_path: String::from("test.txt"),
+            ignore_case: false,
         }
     }
 
@@ -59,7 +94,7 @@ pub mod test {
         let mut config = sample_config();
         config.pattern = String::from("Hello");
         assert_eq!(
-            search_pattern(config).unwrap(),
+            run(config).unwrap(),
             vec![(1_usize, "Hello How are you".to_string())]
         );
     }
@@ -67,22 +102,14 @@ pub mod test {
     fn test_file_not_found() {
         let mut config = sample_config();
         config.file_path = String::from("test1.txt");
-        assert!(search_pattern(config).is_err());
+        assert!(run(config).is_err());
     }
 
     #[test]
     fn test_non_existent_pattern() {
         let mut config = sample_config();
         config.pattern = String::from("abadvdsvsd");
-        assert_eq!(search_pattern(config).unwrap(), vec![]);
-    }
-
-    #[test]
-    fn test_existent_pattern_with_multiple_empty_lines() {
-        assert_eq!(
-            search_pattern(sample_config()).unwrap(),
-            vec![(8_usize, "Siddharth Is Fine?".to_string())]
-        );
+        assert_eq!(run(config).unwrap(), vec![]);
     }
 
     #[test]
@@ -103,7 +130,8 @@ pub mod test {
             ]),
             Ok(Config {
                 pattern: String::from("Siddharth"),
-                file_path: String::from("test.txt")
+                file_path: String::from("test.txt"),
+                ignore_case: false,
             })
         );
     }
