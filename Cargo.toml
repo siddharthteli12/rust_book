@@ -10,4 +10,5 @@ members = [
     "error_handling",
     "generic_traits_lifetime",
     "io_project",
+    "funtional_language",
 ]
