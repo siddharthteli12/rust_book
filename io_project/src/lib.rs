@@ -135,4 +135,57 @@ pub mod test {
             })
         );
     }
+
+    #[test]
+    fn test_case_sensitive() {
+        let content = "Hello How are you SIDDHarth
+Ok No problem
+Tell me what are you doing Siddharth
+        "
+        .to_string();
+        let pattern = "Siddharth".to_string();
+        assert_eq!(
+            search_case_sensitive(pattern, content).unwrap(),
+            vec![(3_usize, "Tell me what are you doing Siddharth".to_string())]
+        );
+    }
+
+    #[test]
+    fn test_case_insensitive() {
+        let content = "Hello How are you Siddharth
+Ok No problem
+Tell me what are you doing SIddharth
+        "
+        .to_string();
+        let pattern = "Siddharth".to_string();
+        assert_eq!(
+            search_case_insensitive(pattern, content).unwrap(),
+            vec![
+                (1_usize, "Hello How are you Siddharth".to_string()),
+                (3_usize, "Tell me what are you doing SIddharth".to_string())
+            ]
+        );
+    }
+
+    #[test]
+    fn test_run_with_ignore_flag() {
+        let mut config = sample_config();
+        config.ignore_case = true;
+
+        assert_eq!(
+            run(config).unwrap(),
+            vec![
+                (8_usize, "Siddharth Is Fine?".to_string()),
+                (10_usize, "I am SiDDharth".to_string())
+            ]
+        );
+    }
+
+    #[test]
+    fn test_run_without_ignore_flag() {
+        assert_eq!(
+            run(sample_config()).unwrap(),
+            vec![(8_usize, "Siddharth Is Fine?".to_string())]
+        );
+    }
 }
