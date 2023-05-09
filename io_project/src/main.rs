@@ -6,16 +6,16 @@ fn main() {
         Ok(config) => match run(config) {
             Ok(result_vec) => {
                 for result in result_vec {
-                    println!("{:} {:}", result.0, result.1);
+                    eprintln!("{:} {:}", result.0, result.1);
                 }
             }
             Err(e) => {
-                println!("Can't find pattern in file due to- {:?}", e);
+                eprintln!("Can't find pattern in file due to- {:?}", e);
                 process::exit(1)
             }
         },
         Err(e) => {
-            println!("Can't build Config due to- {:?}", e);
+            eprintln!("Can't build Config due to- {:?}", e);
             process::exit(2)
         }
     }
