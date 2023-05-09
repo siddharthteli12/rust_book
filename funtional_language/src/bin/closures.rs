@@ -44,4 +44,26 @@ fn closure_ref_ownership_test() {
     })
     .join()
     .unwrap();
+
+    // Condition 5- Closure impl Fnonce trait which means it can only be called once.
+    // Beause closure move the parent variable. Hence, calling it again variable would be invalid.
+    let vec5 = vec![1, 2, 3, 4];
+    // test1 impl FnOnce trait.
+    let test1 = || vec5;
+    test1();
+    //test1(); Error - Closure cannot be invoked more than once because it moves value name.
+
+    // Condition 6- Closure doesn't move external value but mut it.
+    let mut vec6 = vec![1, 2, 3, 4];
+    // test1 impl FnMut trait.
+    let mut test1 = || vec6.push(5);
+    test1();
+    test1(); // Can be called multiple times.
+
+    // Condition 7- Closure doesn't move external value or mut it.
+    let vec6 = vec![1, 2, 3, 4];
+    // test1 impl Fn trait.
+    let test1 = || println!("Value of vec - {:?}", vec6);
+    test1();
+    test1(); // Can be called multiple times.
 }
