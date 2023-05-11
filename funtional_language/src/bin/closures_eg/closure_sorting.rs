@@ -18,16 +18,30 @@ pub fn closure_sort_fnmut() {
         Human::new(22, 165, "Tanuj".to_string()),
         Human::new(24, 168, "Akhil".to_string()),
     ];
+    let mut sort_key_num = 0;
     // Sort by key takes FnMut closure only.
     // Because its updating human list.
 
     // Sorted by age.
-    human_list.sort_by_key(|list| list.age);
-    println!("Human list sorted by age - {:?}", human_list);
+    human_list.sort_by_key(|list| {
+        sort_key_num = sort_key_num + 1;
+        list.age
+    });
+    println!(
+        "Human list sorted by age - {:?} & counter - {:}",
+        human_list, sort_key_num
+    );
 
+    sort_key_num = 0;
     // Sorted by height.
-    human_list.sort_by_key(|list| list.height);
-    println!("Human list sorted by age - {:?}", human_list);
+    human_list.sort_by_key(|list| {
+        sort_key_num = sort_key_num + 1;
+        list.height
+    });
+    println!(
+        "Human list sorted by height - {:?} & counter - {:}",
+        human_list, sort_key_num
+    );
 
     // Issue code.
     // If this closure moves envirnment value its will cause error.
