@@ -1,4 +1,4 @@
-#[allow(dead_code)]
+#![allow(dead_code)]
 #[derive(Debug)]
 struct Human<T> {
     age: T,
@@ -28,4 +28,22 @@ pub fn closure_sort_fnmut() {
     // Sorted by height.
     human_list.sort_by_key(|list| list.height);
     println!("Human list sorted by age - {:?}", human_list);
+
+    // Issue code.
+    // If this closure moves envirnment value its will cause error.
+    // Because sort by key doesn't take FnOnce trait.
+
+    let _string_value = String::from("Siddharth");
+    // Sorted by age.
+
+    // Below code will cause error.
+    // Bacause takes_ownership will move _string_value.
+    // human_list.sort_by_key(|list| {
+    //     takes_ownership(_string_value);
+    //     list.age
+    // });
+}
+
+fn takes_ownership(_string_value: String) {
+    // Do something useful.
 }
