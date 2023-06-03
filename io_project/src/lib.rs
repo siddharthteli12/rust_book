@@ -1,7 +1,4 @@
-use std::{cmp::Ordering, env, fs, io::Error, ops::Add};
-
-// Stores args length for pattern matching in file.
-const ARGS_LEN: usize = 3;
+use std::{env, fs, io::Error, ops::Add};
 
 // To store pattern matching config.
 #[derive(PartialEq, Debug)]
