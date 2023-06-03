@@ -13,22 +13,23 @@ pub struct Config {
 
 impl Config {
     // Validate args len & creates config instance.
-    pub fn build(args: &[String]) -> Result<Self, String> {
-        match args.len().cmp(&ARGS_LEN) {
-            Ordering::Less => Err(format!(
-                "Minimum expected args {:}, got {:}",
-                ARGS_LEN,
-                args.len()
-            )),
-            _ => {
-                let ignore_case = env::var("IGNORE_CASE").is_ok();
-                Ok(Self {
-                    pattern: args[1].clone(),
-                    file_path: args[2].clone(),
-                    ignore_case,
-                })
-            }
-        }
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Self, String> {
+        args.next();
+        let pattern = match args.next() {
+            Some(pattern) => pattern,
+            None => return Err("Pattern args not found".to_string()),
+        };
+
+        let file_path = match args.next() {
+            Some(file_path) => file_path,
+            None => return Err("File path args not found".to_string()),
+        };
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        Ok(Self {
+            pattern,
+            file_path,
+            ignore_case,
+        })
     }
 }
 
@@ -115,7 +116,7 @@ pub mod test {
     #[test]
     fn test_invalid_args_length() {
         assert_eq!(
-            Config::build(&["Siddharth".to_string()]),
+            Config::build(["Siddharth".to_string()].into_iter()),
             Err("Minimum expected args 3, got 1".to_string())
         );
     }
@@ -123,11 +124,14 @@ pub mod test {
     #[test]
     fn test_valid_args_length() {
         assert_eq!(
-            Config::build(&[
-                "main.rs".to_string(),
-                "Siddharth".to_string(),
-                "test.txt".to_string()
-            ]),
+            Config::build(
+                [
+                    "main.rs".to_string(),
+                    "Siddharth".to_string(),
+                    "test.txt".to_string()
+                ]
+                .into_iter()
+            ),
             Ok(Config {
                 pattern: String::from("Siddharth"),
                 file_path: String::from("test.txt"),

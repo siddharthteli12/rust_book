@@ -2,7 +2,7 @@ use io_project::{run, Config};
 use std::{env, process};
 
 fn main() {
-    match Config::build(&env::args().collect::<Vec<String>>()) {
+    match Config::build(env::args().into_iter()) {
         Ok(config) => match run(config) {
             Ok(result_vec) => {
                 for result in result_vec {
