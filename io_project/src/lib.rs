@@ -117,7 +117,7 @@ pub mod test {
     fn test_invalid_args_length() {
         assert_eq!(
             Config::build(["Siddharth".to_string()].into_iter()),
-            Err("Minimum expected args 3, got 1".to_string())
+            Err("Pattern args not found".to_string())
         );
     }
 
