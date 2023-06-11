@@ -11,4 +11,5 @@ members = [
     "generic_traits_lifetime",
     "io_project",
     "funtional_language",
+    "smart_pointer",
 ]
