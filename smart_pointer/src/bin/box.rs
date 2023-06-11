@@ -6,14 +6,12 @@ fn main() {
 
 // Simple smart pointer eg.
 fn simple_box_eg() {
-    // String wrapped in box.
-    let box_sur = Box::new("Teli".to_string());
-    // Simple string.
-    let mut first_name = String::from("Siddharth");
-    // Box wrapped type are treated normally.
-    first_name.push_str(&box_sur);
-    // Appending String with Box<String> works fine.
-    println!("Value of ref to box - {:}", first_name);
+    // i32 wrapped in box.
+    let box_val = Box::new(50);
+    // Simple i32.
+    let val = 50;
+    // Box wrapped type are treated normally & act like a ref.
+    assert_eq!(val, *box_val);
 }
 
 // Box use case 1.
