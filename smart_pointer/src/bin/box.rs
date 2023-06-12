@@ -66,4 +66,8 @@ fn custom_box_eg() {
     // Compiler converts *T to *(T.deref()).
     assert_eq!(23, *custom_box);
     println!("Custom box value - {:?}", custom_box);
+    // Above drop is also called.
+    // Note - Below drop is from std::mem::drop.
+    drop(custom_box);
+    println!("Before function ends");
 }
