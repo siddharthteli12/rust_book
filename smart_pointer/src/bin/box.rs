@@ -4,6 +4,7 @@ use std::ops::Deref;
 fn main() {
     simple_box_eg();
     resursive_type_eg();
+    custom_box_eg();
 }
 
 // Simple smart pointer eg.
@@ -54,9 +55,15 @@ impl<T> Deref for CustomBox<T> {
     }
 }
 
+impl<T> Drop for CustomBox<T> {
+    fn drop(&mut self) {
+        println!("Drop method is called");
+    }
+}
+
 fn custom_box_eg() {
     let custom_box = CustomBox::new(23);
     // Compiler converts *T to *(T.deref()).
     assert_eq!(23, *custom_box);
-    println!("Sid box value - {:?}", custom_box);
+    println!("Custom box value - {:?}", custom_box);
 }
