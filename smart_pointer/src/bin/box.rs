@@ -1,4 +1,6 @@
 #![allow(dead_code)]
+
+use std::ops::Deref;
 fn main() {
     simple_box_eg();
     resursive_type_eg();
@@ -32,4 +34,29 @@ fn resursive_type_eg() {
     };
 
     println!("List value - {:?}", list1);
+}
+
+// Define custom smart pointer type.
+
+#[derive(Debug)]
+struct CustomBox<T>(T);
+
+impl<T> CustomBox<T> {
+    fn new(x: T) -> Self {
+        Self(x)
+    }
+}
+
+impl<T> Deref for CustomBox<T> {
+    type Target = T;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+fn custom_box_eg() {
+    let custom_box = CustomBox::new(23);
+    // Compiler converts *T to *(T.deref()).
+    assert_eq!(23, *custom_box);
+    println!("Sid box value - {:?}", custom_box);
 }
