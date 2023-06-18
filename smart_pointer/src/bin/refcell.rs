@@ -1,9 +1,14 @@
 use std::cell::RefCell;
 
 fn main() {
+    update_immutable();
+}
+
+// Push to immutable vec type.
+fn update_immutable() {
     // ref_eg is immutable.
     let ref_eg = RefCell::new(vec![1]);
-    // But still its value is changed because 
+    // But still its value is changed because
     // its defined inside refcell which allows to mutate imutable types.
     ref_eg.borrow_mut().push(2);
 
