@@ -1,10 +1,8 @@
 #![allow(dead_code)]
 
-use std::ops::Deref;
 fn main() {
     simple_box_eg();
     resursive_type_eg();
-    custom_box_eg();
 }
 
 // Simple smart pointer eg.
@@ -35,39 +33,4 @@ fn resursive_type_eg() {
     };
 
     println!("List value - {:?}", list1);
-}
-
-// Define custom smart pointer type.
-
-#[derive(Debug)]
-struct CustomBox<T>(T);
-
-impl<T> CustomBox<T> {
-    fn new(x: T) -> Self {
-        Self(x)
-    }
-}
-
-impl<T> Deref for CustomBox<T> {
-    type Target = T;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T> Drop for CustomBox<T> {
-    fn drop(&mut self) {
-        println!("Drop method is called");
-    }
-}
-
-fn custom_box_eg() {
-    let custom_box = CustomBox::new(23);
-    // Compiler converts *T to *(T.deref()).
-    assert_eq!(23, *custom_box);
-    println!("Custom box value - {:?}", custom_box);
-    // Above drop is also called.
-    // Note - Below drop is from std::mem::drop.
-    drop(custom_box);
-    println!("Before function ends");
 }
