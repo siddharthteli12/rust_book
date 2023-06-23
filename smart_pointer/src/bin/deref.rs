@@ -22,7 +22,6 @@ impl<T> DerefMut for CustomStruct1<T> {
 // If we impl deref or deref mut for custom_type.
 // Whenever we call, *custom_type deref or deref_mut is called acc.
 
-
 // Note - Deref or DerefMut is mostly impl for smart pointers.
 
 fn main() {
