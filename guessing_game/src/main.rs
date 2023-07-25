@@ -1,22 +1,6 @@
 use rand::{thread_rng, Rng};
 use std::{cmp::Ordering, io::stdin};
-
-mod guess {
-    pub struct Guess(i32);
-
-    impl Guess {
-        pub fn new(value: i32) -> Self {
-            if value < 0 || value > 100 {
-                panic!("Value should be between 0 to 100 only");
-            }
-            Self(value)
-        }
-        pub fn value(self) -> i32 {
-            self.0
-        }
-    }
-}
-
+mod guess;
 use guess::Guess;
 
 fn main() {
@@ -31,11 +15,16 @@ fn main() {
         let mut input_string = String::new();
         stdin().read_line(&mut input_string).unwrap();
 
-        user_guess = match input_string.trim().to_string().parse::<i32>() {
-            Err(e) => panic!("Not valid integer `{:}", e),
-            Ok(val) => Guess::new(val),
-        };
+        // Construct guess value.
+        user_guess = Guess::new(
+            input_string
+                .trim()
+                .to_string()
+                .parse::<i32>()
+                .expect("Invalid input"),
+        );
 
+        // Match user input against value & revert.
         match user_guess.value().cmp(&random_num) {
             Ordering::Greater => println!("Guess value too big"),
             Ordering::Less => println!("Guess value too small"),
@@ -49,8 +38,7 @@ fn main() {
 
 #[cfg(test)]
 mod test {
-    use crate::guess::Guess;
-
+    use super::Guess;
     #[test]
     #[should_panic(expected = "Value should be between 0 to 100 only")]
     fn test_guess_invalid_value_1() {
