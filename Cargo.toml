@@ -12,4 +12,5 @@ members = [
     "io_project",
     "funtional_language",
     "smart_pointer",
+    "concurrency",
 ]
