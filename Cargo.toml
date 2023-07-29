@@ -3,7 +3,6 @@
 members = [
     "guessing_game",
     "ownership",
-    "first_word",
     "managing_growing_project/bin_crates",
     "managing_growing_project/modules",
     "common_collection",
