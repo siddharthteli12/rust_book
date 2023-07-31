@@ -1,35 +1,26 @@
 use std::sync::mpsc;
 use std::thread;
-struct StudentMarks {
-    english: f32,
-    maths: f32,
-    history: f32,
-}
+use std::time::Duration;
+
 fn main() {
     let (send, receive) = mpsc::channel::<f32>();
 
     // Send value through channel.
-    let send_thread = thread::spawn(move || {
-        send.send(calculate_marks(StudentMarks {
-            english: 50.0,
-            maths: 80.0,
-            history: 90.0,
-        }))
-        .unwrap();
+    thread::spawn(move || {
+        let values = vec![32.23, 232.55, 80.2390, 2032.023];
+
+        for value in values {
+            send.send(value * value).unwrap();
+            thread::sleep(Duration::from_millis(500));
+        }
+
+        // Receiver will stop listening for new message.
+        println!("Dropping sender...");
     });
 
-    // Receive value through channel.
-    let receive_thread = thread::spawn(move || {
-        let value = receive.recv().unwrap();
-        println!("Student marks cal. - {:?}", value);
-    });
-
-    // Finish both threads.
-    send_thread.join().unwrap();
-    receive_thread.join().unwrap();
-}
-
-// Simple utility function.
-fn calculate_marks(student_info: StudentMarks) -> f32 {
-    (student_info.english + student_info.history + student_info.maths) / 3_f32
+    // Receiver will wait for message till sender is not dropped.
+    for value in receive {
+        println!("{:}", value);
+    }
+    println!("End of receiver iterator because no sender exists");
 }
