@@ -6,8 +6,7 @@ impl Guess {
     pub fn new(value: i32) -> Self {
         if (0..100).contains(&value) {
             Self(value)
-        }
-        else {
+        } else {
             println!("Value should be between 0 to 100 only");
             exit(0x0100)
         }
