@@ -1,47 +1,42 @@
-pub struct Post<'a> {
-    text: &'a str,
-    post_state: State,
+// State trait.
+pub trait State {
+    fn output(&self);
 }
 
-enum State {
-    Draft,
-    WaitingForApproval,
-    Approved,
+// A & B are values which will decide behaviour.
+struct A;
+impl State for A {
+    fn output(&self) {
+        println!("Inside A");
+    }
 }
 
-impl<'a> Default for Post<'a> {
+pub struct B;
+
+impl State for B {
+    fn output(&self) {
+        println!("Inside B");
+    }
+}
+
+pub struct Target(Box<dyn State>);
+
+impl Default for Target {
     fn default() -> Self {
-        Self {
-            text: "",
-            post_state: State::Draft,
-        }
+        Self(Box::new(A))
     }
 }
 
-impl<'a> Post<'a> {
+impl Target {
     pub fn new() -> Self {
-        Post::default()
-    }
-    pub fn add_text(&mut self, text: &'a str) {
-        match self.post_state {
-            State::Draft => {
-                self.text = text;
-                self.post_state = State::WaitingForApproval;
-            }
-            _ => panic!("Can't add text when not in draft state"),
-        };
-    }
-    pub fn approve(&mut self) {
-        match self.post_state {
-            State::WaitingForApproval => self.post_state = State::Approved,
-            _ => panic!("Can't approve, coz state is not in waiting for approval"),
-        }
+        Self::default()
     }
 
-    pub fn content(&self) -> &str {
-        match self.post_state {
-            State::Approved => self.text,
-            _ => "",
-        }
+    pub fn change_state(&mut self, new_state: Box<dyn State>) {
+        self.0 = new_state;
+    }
+
+    pub fn output(&self) {
+        self.0.output();
     }
 }

@@ -1,11 +1,11 @@
-use blog::Post;
+use blog::{Target, B};
+
 fn main() {
-    let mut post = Post::new();
-    assert_eq!(post.content(), "");
+    let mut target = Target::new();
+    // Value is A.
+    target.output();
 
-    post.add_text("Hello How are you doing today?");
-    assert_eq!(post.content(), "");
-
-    post.approve();
-    assert_eq!(post.content(), "Hello How are you doing today?");
+    //Value is changed to B.
+    target.change_state(Box::new(B));
+    target.output();
 }
