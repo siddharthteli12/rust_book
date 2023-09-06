@@ -1,3 +1,8 @@
+/*
+Eg 1.
+Default generic type trait.
+
+*/
 trait IteratorAdd<Rhs = Self> {
     type Output;
     fn iter_both(self, rhs: Rhs) -> Option<Self::Output>;
@@ -26,8 +31,46 @@ impl IteratorAdd<Vec<f64>> for Vec<i32> {
     }
 }
 
+/*
+Eg 2.
+Same method differnet trait, using ful syntax to differentiate.
+
+*/
+
+pub trait TestTrait1 {
+    fn test_method(&self) -> i32;
+}
+
+pub trait TestTrait2 {
+    fn test_method(&self) -> i32;
+}
+
+pub trait TestTrait3 {
+    fn test_method(&self) -> i32;
+}
+
+struct TestStruct;
+
+impl TestTrait1 for TestStruct {
+    fn test_method(&self) -> i32 {
+        1
+    }
+}
+
+impl TestTrait2 for TestStruct {
+    fn test_method(&self) -> i32 {
+        2
+    }
+}
+
+impl TestTrait3 for TestStruct {
+    fn test_method(&self) -> i32 {
+        3
+    }
+}
+
 #[cfg(test)]
-mod tests {
+mod test_eg_1 {
     use super::*;
 
     #[test]
@@ -45,5 +88,21 @@ mod tests {
             list1.iter_both(list2),
             Some(vec![19.7, 16.54, 58.45, 343.0, 23.0, 12.0])
         );
+    }
+}
+
+#[cfg(test)]
+mod test_eg_2 {
+    use super::*;
+
+    #[test]
+    fn should_work() {
+        let test_struct = TestStruct;
+        // Compiler can't find which test_method to call here.
+        // test_struct.test_method(); -> Error.
+
+        assert_eq!(TestTrait1::test_method(&test_struct), 1);
+        assert_eq!(TestTrait2::test_method(&test_struct), 2);
+        assert_eq!(TestTrait3::test_method(&test_struct), 3);
     }
 }
