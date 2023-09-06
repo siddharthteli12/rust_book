@@ -69,6 +69,44 @@ impl TestTrait3 for TestStruct {
     }
 }
 
+/*
+Eg 3.
+Same method differnet trait, using ful syntax to differentiate but without self.
+
+*/
+
+pub trait Trait1 {
+    fn test_method() -> i32;
+}
+
+pub trait Trait2 {
+    fn test_method() -> i32;
+}
+
+pub trait Trait3 {
+    fn test_method() -> i32;
+}
+
+struct Struct;
+
+impl Trait1 for Struct {
+    fn test_method() -> i32 {
+        1
+    }
+}
+
+impl Trait2 for Struct {
+    fn test_method() -> i32 {
+        2
+    }
+}
+
+impl Trait3 for Struct {
+    fn test_method() -> i32 {
+        3
+    }
+}
+
 #[cfg(test)]
 mod test_eg_1 {
     use super::*;
@@ -104,5 +142,22 @@ mod test_eg_2 {
         assert_eq!(TestTrait1::test_method(&test_struct), 1);
         assert_eq!(TestTrait2::test_method(&test_struct), 2);
         assert_eq!(TestTrait3::test_method(&test_struct), 3);
+    }
+}
+
+#[cfg(test)]
+mod test_eg_3 {
+    use super::*;
+
+    #[test]
+    fn should_work_1() {
+        // Above signature is invalid now.
+        // Compiler can't find for which type trait method is to be called for.
+        // TestTrait1::test_method()
+
+        // <Type as Trait>::function_signature is used to associate trait & caller type.
+        assert_eq!(<Struct as Trait1>::test_method(), 1);
+        assert_eq!(<Struct as Trait2>::test_method(), 2);
+        assert_eq!(<Struct as Trait3>::test_method(), 3);
     }
 }
