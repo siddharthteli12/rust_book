@@ -14,4 +14,6 @@ members = [
     "concurrency",
     "oops/gui",
     "oops/blog",
+    "advance_features/unsafe_rust",
+    "advance_features/advance_traits",
 ]
