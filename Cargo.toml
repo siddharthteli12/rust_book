@@ -16,4 +16,6 @@ members = [
     "oops/blog",
     "advance_features/unsafe_rust",
     "advance_features/advance_traits",
+    "advance_features/macros",
+    "server",
 ]
