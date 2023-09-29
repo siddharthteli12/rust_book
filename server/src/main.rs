@@ -10,7 +10,7 @@ use server::ThreadPool;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:8090").expect("Unable to bind");
     let pool = ThreadPool::new(10);
-    for stream in listener.incoming().flatten() {
+    for stream in listener.incoming().flatten().take(2) {
         pool.execute(|| handle_stream_connection(stream));
     }
 }
