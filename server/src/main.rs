@@ -5,14 +5,13 @@ use std::{
     thread,
     time::Duration,
 };
+
+use server::ThreadPool;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:8090").expect("Unable to bind");
-    for stream_result in listener.incoming() {
-        if let Ok(stream) = stream_result {
-            thread::spawn(|| {
-                handle_stream_connection(stream);
-            });
-        }
+    let pool = ThreadPool::new(10);
+    for stream in listener.incoming().flatten() {
+        pool.execute(|| handle_stream_connection(stream));
     }
 }
 
